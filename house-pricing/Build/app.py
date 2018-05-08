@@ -11,6 +11,10 @@ app = Flask(__name__)
 # TODO: put model training into a separate app and save/load the model weights
 W, b, mean, maxDifference = mlModel.getTrainedWeights()
 
+@app.route('/healthz')
+def healthz():
+    return Response("Is Healthy", status=200, mimetype='application/json')
+
 
 @app.route("/predict-by-size/<house_size>")
 def predict_house_price(house_size):
