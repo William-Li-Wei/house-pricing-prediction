@@ -65,7 +65,7 @@ docker login
 docker push sadleader/house-pricing-server
 ```
 
-to run the app as single container
+##### to run the app as single container
 ```
 docker run -p 5000:5000 sadleader/house-pricing-server
 ```
@@ -73,7 +73,7 @@ docker run -p 5000:5000 sadleader/house-pricing-server
  - change the url to `http://localhost:5000/predicte-by-size/1200`, you will see the prediction (in $1000)
 
 
-to create pod and expose service for the app
+##### to create pod and expose service for the app
 ```
 cd ../Deploy
 source <(kubectl completion bash)
@@ -91,11 +91,25 @@ To access the service within the cluster,
 notice that there's an entrypoint from the service description,
 open `http://<ENTRYPOINT>` in the browser
 
+#### the liveness & readiness probes
+1. the liveness probes was added to the Deployment/app.pod.yaml
+```
+livenessProbe:
+  httpGet:
+    path: /healthz                                                                                                                                                            
+    port: 5000
+```
+2. the health check endpoint was added to the app.py
+```
+@app.route('/healthz')
+def healthz():
+    return Response("Is Healthy", status=200, mimetype='application/json')
+```
+3. the readiness probes:
 
+The only difference is that you use the readinessProbe field instead of the livenessProbe field.
 
-
-
-
+[see: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/]
 
 
 
