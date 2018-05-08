@@ -19,18 +19,18 @@ Dataset:
 
 Tasks:
 
- - Create a Kubernetes pod (Application, Database, Webserver)
- - Store the data in a database container and make it available to your app container
- - Create a ML module in Python with the ability to predict house prices (Y), based on the square feets as input parameter (X). Train your model based on the dataset.
- - Create a simple HTTP REST-API on top of your ML module that takes X as parameter for the request and responds with prediction Y
- - Create a simple HTTP REST-API on top of your database module that allows passing a simple "SELECT" statement
- - Augment your containers and serve the application and the database query with HTTPS via Nginx
- - Replicate the app container and set a loadbalancer
- - Monitor app & DB container (live & readiness)
- - Add another DB container that allows to query for Z (simulate and ingest Z!) 
- - Do a rolling upgrade of the application container.
- - Create sharding of functions for querying X, Y and Z from the database
- - Commit all code & results to Git using Gitflow
+ - Create a Kubernetes pod (Application, Database, Webserver)  **(Webserver pod done)**
+ - Store the data in a database container and make it available to your app container **(open with config questions)**
+ - Create a ML module in Python with the ability to predict house prices (Y), based on the square feets as input parameter (X). Train your model based on the dataset. **(done with mocked data)**
+ - Create a simple HTTP REST-API on top of your ML module that takes X as parameter for the request and responds with prediction Y **(done)**
+ - Create a simple HTTP REST-API on top of your database module that allows passing a simple "SELECT" statement **(open)**
+ - Augment your containers and serve the application and the database query with HTTPS via Nginx **(open)**
+ - Replicate the app container and set a loadbalancer **(done)**
+ - Monitor app & DB container (live & readiness) **(done with questions)**
+ - Add another DB container that allows to query for Z (simulate and ingest Z!) **(open)**
+ - Do a rolling upgrade of the application container. **(done)**
+ - Create sharding of functions for querying X, Y and Z from the database **(open)**
+ - Commit all code & results to Git using Gitflow **(done)**
 
 ### Steps:
 
@@ -127,3 +127,35 @@ kubectl create -f app.service.yaml
 kubectl get pods
 ```
 you will see 3 pods are running
+
+
+
+#### the rolling update
+make some change in the app.py and tag the image with a new tag 'sadleader/house-pricing-server:v2'.
+
+So that 
+ - in V1, http://localhost:5000/ says:
+`Welcome to the house pricing prediction app!`
+ - in V2, http://localhost;5000/ says:
+ `Welcome to the house pricing prediction app!V2!!!`
+
+show current deployments by `kubectl get deployments`
+edit the deployment and change the image version form `V1` to `V1` by
+```
+kubectl edit deployment house-pricing-server
+```
+save and quit the editing mode, it will starts the rolling upgrade.
+
+run `kubectl get replicaSet` to see the new replicaSet
+
+run `kubectl rollout history deployment house-pricing-server` to view the new entry in the rollout history
+
+run `kubectl rollout pause deployment house-pricing-server` to pause the update
+
+run `kubectl rollout status deployment house-pricing-server` to view the current status of the update.
+
+run `kubectl rollout resume deployment house-pricing-server` to resume the update.
+
+after success, you should be able to see the new welcome message.
+
+run `kubectl rollout undo deployment house-pricing-server` to rollback.

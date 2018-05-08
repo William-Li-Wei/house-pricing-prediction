@@ -26,7 +26,7 @@ def predict_house_price(house_size):
 @app.route("/")
 def hello():
     print(W)
-    return "Welcome to the house pricing prediction app!"
+    return "Welcome to the house pricing prediction app!\n V2!!!"
 
 
 if __name__ == "__main__":
