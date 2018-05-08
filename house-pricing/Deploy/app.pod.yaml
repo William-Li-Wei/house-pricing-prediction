@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: house-pricing-server
+  labels:
+    app: house-pricing-server
+spec:
+  containers:
+    - name: house-pricing-server
+      image: sadleader/house-pricing-server
+      ports:
+        - name: http
+          containerPort: 5000
+        - name: health
+          containerPort: 81
+      resources:
+        limits:
+          cpu: 0.2
+          memory: "10Mi"

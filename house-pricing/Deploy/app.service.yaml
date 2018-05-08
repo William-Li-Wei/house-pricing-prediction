@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: house-pricing-server
+spec:
+  selector:
+    app: house-pricing-server
+  ports:
+    - protocol: "TCP"
+      port: 5000
+      targetPort: 5000
+      nodePort: 31000
+  type: NodePort
