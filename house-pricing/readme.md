@@ -91,7 +91,7 @@ To access the service within the cluster,
 notice that there's an entrypoint from the service description,
 open `http://<ENTRYPOINT>` in the browser
 
-#### the liveness & readiness probes
+#### the liveness & readiness probes (?? with some questions)
 1. the liveness probes was added to the Deployment/app.pod.yaml
 ```
 livenessProbe:
@@ -111,6 +111,19 @@ The only difference is that you use the readinessProbe field instead of the live
 
 [see: https://kubernetes.io/docs/tasks/configure-pod-container/configure-liveness-readiness-probes/]
 
+the above livenessProbes got the error 172.17.0.4:5000/healthz connecton refused.
+the pod will be running and users can visit 172.17.0.4:5000, but soon failed, then repeat.
 
+#### the replicaSet
 
-
+created a new deployment file app.deployment.yaml, with a replicas setting:
+```
+replicas: 3
+```
+run
+```
+kubectl create -f app.deployment.yaml
+kubectl create -f app.service.yaml
+kubectl get pods
+```
+you will see 3 pods are running
