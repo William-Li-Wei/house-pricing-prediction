@@ -1,0 +1,21 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: house-pricing-server
+spec:
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: house-pricing-server
+    spec:
+      containers:
+        - name: house-pricing-server
+          image: "sadleader/house-pricing-server:v1"
+          ports:
+            - name: http
+              containerPort: 5000
+          #livenessProbe:
+          #  httpGet:
+          #    path: /healthz
+          #    port: 5000
