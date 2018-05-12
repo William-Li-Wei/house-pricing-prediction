@@ -1,3 +1,17 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: house-pricing-server
+spec:
+  selector:
+    app: house-pricing-server
+  ports:
+    - protocol: "TCP"
+      port: 80
+      targetPort: 80
+      nodePort: 31000
+  type: NodePort
+---
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -11,10 +25,10 @@ spec:
     spec:
       containers:
         - name: house-pricing-server
-          image: "sadleader/house-pricing-server:v1"
+          image: "sadleader/house-pricing-server:v3"
           ports:
             - name: http
-              containerPort: 5000
+              containerPort: 80
           #livenessProbe:
           #  httpGet:
           #    path: /healthz

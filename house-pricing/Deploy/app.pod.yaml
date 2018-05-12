@@ -10,7 +10,7 @@ spec:
       image: sadleader/house-pricing-server:v1
       ports:
         - name: http
-          containerPort: 5000
+          containerPort: 80
           protocol: TCP
       resources:
         limits:
