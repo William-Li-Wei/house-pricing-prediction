@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: secured-frontend
+spec:
+  selector:
+    app: secured-frontend
+  ports:
+  - protocol: "TCP"
+    port: 443
+    targetPort: 443
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: secured-frontend
+spec:
+  selector:
+    matchLabels:
+      app: secured-frontend
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: secured-frontend
+    spec:
+      containers:
+      - name: nginx
+        image: "nginx:1.9.14"
+        lifecycle:
+          preStop:
+            exec:
+              command: ["/usr/sbin/nginx","-s","quit"]
+        volumeMounts:
+          - name: "tls-certs"
+            mountPath: "/etc/tls"
+          - name: "secured-frontend-conf"
+            mountPath: "/etc/nginx/conf.d"
+      volumes:
+      - name: "tls-certs"
+        secret:
+          secretName: "tls-certs"
+      - name: "secured-frontend-conf"
+        configMap:
+          name: "secured-frontend-conf"
+          items:
+            - key: "proxy.conf"
+              path: "proxy.conf"
